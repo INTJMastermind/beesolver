@@ -62,8 +62,8 @@ def beesolver(letters, word_list):
 
 
 def main():
-    letters = input('Enter the letters seperated by spaces, the first letter is the mandatory letter: ')
-    letters = letters.lower().split(' ')
+    letters = input('Enter the letters without spaces. The first letter is the mandatory letter: ')
+    letters = list(letters.lower())
     words = load_words(FILE_NAME)
 
     answers = beesolver(letters, words)
