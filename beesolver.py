@@ -33,8 +33,24 @@ def check_word(word, letters):
     for letter in word:
         if letter not in letters:
             return False
-            
+
     return True
+
+
+def score_word(word, letters):
+    '''
+    Scores a valid word by the following rules:
+    - Length 4 words get 1 point
+    - Longer words are scored by the number of letters.
+    - Pangram gets 7 bonus points.
+    '''
+    if len(word) == 4:
+        return 1
+   
+    score = len(word)
+    if all([letter in list(word.lower()) for letter in letters]):
+        score += 7
+    return score
 
 
 def beesolver(letters, word_list):
@@ -42,17 +58,22 @@ def beesolver(letters, word_list):
     Input: None
     Output: Returns a list valid words.
     '''
-    return {word for word in word_list if check_word(word, letters) == True}
+    return {word: score_word(word, letters) for word in word_list if check_word(word, letters) == True}
 
 
 def main():
     letters = input('Enter the letters seperated by spaces, the first letter is the mandatory letter: ')
     letters = letters.lower().split(' ')
     words = load_words(FILE_NAME)
-    answers = sorted(beesolver(letters, words))
-    print(f'\n{len(answers)} possible words found:')
-    for answer in answers:
-        print(answer)
+
+    answers = beesolver(letters, words)
+
+    print(f'\n{len(answers)} possible words found.')
+    print(f'Total score: {sum(answers.values())}\n')
+
+    for word, score in sorted(answers.items()):
+        print(f'{word} - {score}')
+
 
 if __name__ == '__main__':
     main()
