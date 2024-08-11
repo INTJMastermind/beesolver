@@ -1,12 +1,13 @@
 """
 Scrapes historical answers from sbsolver.com and adds their answers to dictionary.txt
 """
-
 import requests
 from bs4 import BeautifulSoup
 from scrape import scrape
 
 FILENAME = 'dictionary.txt'
+START = 2288
+END = START+10
 
 def append(word: str):
     """
@@ -16,18 +17,18 @@ def append(word: str):
         f.write(word+'\n')
 
 
-def update_dictionary(words):
-    with open(FILENAME) as f:
+def update_dictionary(words, file=FILENAME):
+    with open(file) as f:
         dictionary = set(f.read().splitlines())
 
     # Only add words that are not already in the dictionary file
     new_words = {word for word in words if word not in dictionary}
 
-    with open(FILENAME, 'a') as f:
+    with open(file, 'a') as f:
         for word in new_words:
             f.write(word+'\n')
 
-    print(f'{len(new_words)} new words added to {FILENAME}')
+    print(f'{len(new_words)} new words added to {file}')
 
 
 def main():
@@ -37,7 +38,7 @@ def main():
     # Solutions are numbered numerically, i.e. "https://www.sbsolver.com/s/1234"
     URL_BASE = 'https://www.sbsolver.com/s/'
     total_words = set()
-    for num in range(2286,2288):
+    for num in range(START,END):
         url = URL_BASE + str(num)
 
         try:
