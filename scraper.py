@@ -8,25 +8,10 @@ from bs4 import BeautifulSoup
 FILENAME = 'dictionary.txt'
 
 def get_answers(html_file):
-    # Answers are found in a tag <td class="bee-hover"> with a link to
-    # "https://www.sbsolver.com/h/" + the answer.
+    # Answers are found inside tags <td class="bee-hover"><a>
     soup = BeautifulSoup(html_file, 'html.parser')
-    # Filter tags using  <td> and class="bee-hover"
-    bee_hovers = soup.find_all('td', class_="bee-hover")
-    # Use the sbsolver URL to mark the start of the answer word.
-    marker = 'https://www.sbsolver.com/h/'
-    words = set()
-    for tag in bee_hovers:
-        line = str(tag)
-        # The word begins after the URL
-        idx_begin = line.index(marker)+len(marker)
-        line = line[idx_begin:]
-        # The word ends with a "
-        idx_end = line.index('"')
-        # Convert to upper case to match the dictionary.txt format
-        line = line[:idx_end].upper()
-        words.add(line)
-    return words
+    answers = soup.find_all('td', class_='bee-hover')
+    return {answer.a.text for answer in answers}
 
 
 def append(word: str):
@@ -58,7 +43,7 @@ def main():
     # Solutions are numbered numerically, i.e. "https://www.sbsolver.com/s/1234"
     URL_BASE = 'https://www.sbsolver.com/s/'
     total_words = set()
-    for num in range(2286,9999):
+    for num in range(2286,2288):
         url = URL_BASE + str(num)
 
         try:
