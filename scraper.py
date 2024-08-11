@@ -56,15 +56,24 @@ def main():
     Scrapes historical answers from sbsolver.com and adds their answers to dictionary.txt
     """
     # Solutions are numbered numerically, i.e. "https://www.sbsolver.com/s/1234"
-    urls = ['https://www.sbsolver.com/s/'+str(num) for num in range(1200,2287)] #2287
-
+    URL_BASE = 'https://www.sbsolver.com/s/'
     total_words = set()
-    for url in urls:
-        print(f'Loading {url}')
-        content = requests.get(url).text
+    for num in range(2286,9999):
+        url = URL_BASE + str(num)
+
+        try:
+            print(f'Loading {url}')
+            content = requests.get(url).text
+        except:
+            print(f"Unable to load {url}. Aborting and saving progress!")
+            break
+
         new_words = get_answers(content)
         print(f'{len(new_words)} words found.')
+
+        old_len = len(total_words) # Get old length to count new words
         total_words.update(new_words)
+        print(f'{len(total_words)-old_len} new words found.')
         print(f'{len(total_words)} total words.\n')
 
     # We update the dictionary after grabbing a chunk of words to avoid repetitive file I/O ops.
