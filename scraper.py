@@ -4,15 +4,9 @@ Scrapes historical answers from sbsolver.com and adds their answers to dictionar
 
 import requests
 from bs4 import BeautifulSoup
+from scrape import scrape
 
 FILENAME = 'dictionary.txt'
-
-def get_answers(html_file):
-    # Answers are found inside tags <td class="bee-hover"><a>
-    soup = BeautifulSoup(html_file, 'html.parser')
-    answers = soup.find_all('td', class_='bee-hover')
-    return {answer.a.text for answer in answers}
-
 
 def append(word: str):
     """
@@ -53,7 +47,7 @@ def main():
             print(f"Unable to load {url}. Aborting and saving progress!")
             break
 
-        new_words = get_answers(content)
+        new_words = scrape(content)
         print(f'{len(new_words)} words found.')
 
         old_len = len(total_words) # Get old length to count new words

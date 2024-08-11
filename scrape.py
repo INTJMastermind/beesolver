@@ -18,7 +18,7 @@ def download(url: str, file_name: str):
 
 def scrape(site):
     soup = BeautifulSoup(site, 'lxml')
-    return [td.a.text for td in soup.find_all('td', class_='bee-hover')]
+    return [td.a.text for td in soup.find('table', class_='bee-set').find_all('td', class_='bee-hover')]
 
 
 def main():
