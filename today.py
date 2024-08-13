@@ -72,8 +72,9 @@ def compare(answers, solutions, dictionary):
 
 
 def update(words, file):
+    # Alphabetize words before writing into dictionary.
     with open(file, 'w') as f:
-        for word in words:
+        for word in sorted(list(words)):
             f.write(word+'\n')
 
     print(f'{len(words)} words written to {file}.')

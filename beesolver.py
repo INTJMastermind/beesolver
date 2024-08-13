@@ -55,7 +55,7 @@ def score_word(word, letters):
         return 1
    
     score = len(word)
-    if all([letter in list(word.lower()) for letter in letters]):
+    if all([letter in word for letter in letters]):
         score += 7
     return score
 
@@ -67,10 +67,10 @@ def main():
     letters = input("Enter the game's letters without spaces. The first letter must be the center / mandatory letter: ")
     letters = list(letters.upper())
 
-    answers = solve(letters, words)
+    answers = sorted(solve(letters, words))
     scores = [score_word(word, letters) for word in answers]
 
-    print(f'\n{len(answers)} possible words found.')
+    print(f'\n{len(answers)} solutions found.')
     print(f'Total score: {sum(scores)}\n')
 
     for word, score in zip(answers, scores):
