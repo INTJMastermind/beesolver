@@ -67,7 +67,7 @@ def main():
     letters = input("Enter the game's letters without spaces. The first letter must be the center / mandatory letter: ")
     letters = list(letters.upper())
 
-    answers = sorted(solve(letters, words))
+    answers = sorted(solve(letters, words), reverse=True, key=len)
     scores = [score_word(word, letters) for word in answers]
 
     print(f'\n{len(answers)} solutions found.')
