@@ -1,5 +1,3 @@
-FILE_NAME = 'dictionary.txt' # Name of dictionary file
-
 def load_words(file_name):
     '''
     Input: "file_name": a string that points to the dictionary of allowed words.
@@ -23,7 +21,7 @@ def check_word(word, letters):
     if len(word) < 4:
         return False
 
-    word = word.lower()
+    word = word.upper()
 
     # Check for mandatory letter
     if letters[0] not in word:
@@ -53,25 +51,28 @@ def score_word(word, letters):
     return score
 
 
-def beesolver(letters, word_list):
+def solve(letters, word_list):
     '''
     Input: None
     Output: Returns a list valid words.
     '''
-    return {word: score_word(word, letters) for word in word_list if check_word(word, letters) == True}
+    return [word for word in word_list if check_word(word, letters) == True]
 
 
 def main():
+    FILE_NAME = 'dictionary.txt' # Name of dictionary file
+
     letters = input('Enter the letters without spaces. The first letter is the mandatory letter: ')
-    letters = list(letters.lower())
+    letters = list(letters.upper())
     words = load_words(FILE_NAME)
 
-    answers = beesolver(letters, words)
+    answers = solve(letters, words)
+    scores = [score_word(word, letters) for word in answers]
 
     print(f'\n{len(answers)} possible words found.')
-    print(f'Total score: {sum(answers.values())}\n')
+    print(f'Total score: {sum(scores)}\n')
 
-    for word, score in sorted(answers.items()):
+    for word, score in zip(answers, scores):
         print(f'{word} - {score}')
 
 

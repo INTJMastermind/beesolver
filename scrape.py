@@ -1,5 +1,6 @@
 import requests
 import os
+import re
 from bs4 import BeautifulSoup
 
 def download(url: str, file_name: str):
@@ -22,14 +23,27 @@ def scrape(site):
     """
     soup = BeautifulSoup(site, 'html.parser')
 
+    # Scrape the date
+    date = soup.find('span', class_ = re.compile('^bee-date'))
+    date = date.a.text
+
+    # Scrape the letters.
+    # All the letters are found in a <div class='thinner-space-after>
+    # Letters are images, listed in order with the center letter first
+    images = soup.find('div', class_='thinner-space-after').find_all('img')
+    # Extracting each letter as the last character of image alt text.
+    letters = [image['alt'][-1] for image in images]
+    letters = ''.join(letters)
+
+    # Scrape the answers
     # All the answers are found in a <table> with class='bee-set'
     bee_set = soup.find('table', class_='bee-set')
-
     # Each answer is inside a <td> tag with class = 'bee-hover'
     bee_hover = bee_set.find_all('td', class_='bee-hover')
-
     # The actual string is the text of the <a> tag.
-    return [item.a.text for item in bee_hover]
+    answers = [item.a.text for item in bee_hover]
+
+    return date, letters, answers
 
 
 def main():
@@ -45,14 +59,17 @@ def main():
         download(site_url, file_name)
 
     # Open the downloaded file and scrape it.
-    try:
-        with open(file_name) as file:
-            answers = scrape(file.read())
-    except:
-        print(f'Unable to open {file_name}. Aborting.')
-        return
+    with open(file_name) as file:
+        date, letters, answers = scrape(file.read())
+    
+    # Print the date
+    print(f'Puzzle for {date}')
+
+    # Print the letters
+    print(f'Letters: {letters}')
     
     # Print the answers
+    print(f'{len(answers)} Answers:')
     for word in answers:
         print(word)
 
