@@ -1,13 +1,14 @@
-def load_words(file_name):
+def load(file_name):
     '''
     Input: "file_name": a string that points to the dictionary of allowed words.
     Output: A set of strings corresponding to the contents of that dictionary.
     '''
-
-    with open(file_name) as file:
-        word_list = file.read().splitlines()
-    
-    return set(word_list)
+    try:
+        with open(file_name) as file:
+            word_list = file.read().splitlines()
+        return set(word_list)
+    except:
+        return set()    
 
 
 def check_word(word, letters):
@@ -35,6 +36,14 @@ def check_word(word, letters):
     return True
 
 
+def solve(letters, words):
+    '''
+    Input: A string of letters and a set of possible words.
+    Output: Returns a list valid words.
+    '''
+    return [word for word in words if check_word(word, letters) == True]
+
+
 def score_word(word, letters):
     '''
     Scores a valid word by the following rules:
@@ -51,20 +60,12 @@ def score_word(word, letters):
     return score
 
 
-def solve(letters, word_list):
-    '''
-    Input: None
-    Output: Returns a list valid words.
-    '''
-    return [word for word in word_list if check_word(word, letters) == True]
-
-
 def main():
     FILE_NAME = 'dictionary.txt' # Name of dictionary file
+    words = load(FILE_NAME)
 
-    letters = input('Enter the letters without spaces. The first letter is the mandatory letter: ')
+    letters = input("Enter the game's letters without spaces. The first letter must be the center / mandatory letter: ")
     letters = list(letters.upper())
-    words = load_words(FILE_NAME)
 
     answers = solve(letters, words)
     scores = [score_word(word, letters) for word in answers]
