@@ -98,7 +98,7 @@ def main():
     
     print(f'Puzzle for {date}: {letters}')
     print(f'{len(answers)} Answers:')
-    for word in answers:
+    for word in sorted(answers, reverse=True, key=len):
         print(word)
 
     words = beesolver.load(file_name)
