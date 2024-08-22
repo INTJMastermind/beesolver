@@ -7,8 +7,8 @@ import today
 from bs4 import BeautifulSoup
 
 FILENAME = 'dictionary.txt'
-START = 1939
-END = 2289
+START = 2288
+END = 2300
 
 
 def load_and_prune(file):
@@ -37,13 +37,16 @@ def main():
     # Load a set of dictionary words with words <4 characters pruned out.
     dictionary = load_and_prune(FILENAME)
 
+    # Creating a requests session.
+    s = requests.Session()
+
     # Solutions are numbered numerically, i.e. "https://www.sbsolver.com/s/1234"
     URL_BASE = 'https://www.sbsolver.com/s/'
     for num in range(START,END):
         url = URL_BASE + str(num)
         try:
             print(f'\nLoading {url}')
-            content = requests.get(url).text
+            content = s.get(url).text
         except:
             print(f"Unable to load {url}. Aborting and saving progress!")
             break
