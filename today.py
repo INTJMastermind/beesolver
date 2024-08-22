@@ -3,7 +3,6 @@ Checks todays answers from sbsolver.com/answers and updates the dictionary.
 """
 
 import requests
-import re
 import beesolver
 from bs4 import BeautifulSoup
 
@@ -28,7 +27,7 @@ def scrape(site):
     soup = BeautifulSoup(site, 'html.parser')
 
     # Scrape the date
-    date = soup.find('span', class_ = re.compile('^bee-date'))
+    date = soup.find('span', class_=('bee-date'))
     date = date.a.text
 
     # Scrape the letters.
@@ -98,7 +97,7 @@ def main():
     
     print(f'Puzzle for {date}: {letters}')
     print(f'{len(answers)} Answers:')
-    for word in answers:
+    for word in sorted(answers, reverse=True, key=len):
         print(word)
 
     words = beesolver.load(file_name)
