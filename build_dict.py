@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 FILENAME = 'dictionary.txt'
 START = 2300
-END = 2320
+END = 2457
 
 
 def load_and_prune(file):
